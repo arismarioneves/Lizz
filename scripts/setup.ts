@@ -97,7 +97,7 @@ async function main() {
     const claudeVersion = execSync('claude --version', { encoding: 'utf-8', stdio: 'pipe' }).trim()
     ok(`Claude CLI: ${claudeVersion}`)
   } catch {
-    fail('claude CLI not found. Install it from https://claude.ai/code and run `claude login`.')
+    fail('Claude CLI not found. Install it from https://claude.com/product/claude-code.')
     process.exit(1)
   }
 
