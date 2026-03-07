@@ -1,5 +1,5 @@
 import { Bot } from 'grammy'
-import { TELEGRAM_BOT_TOKEN, ALLOWED_CHAT_ID, MAX_MESSAGE_LENGTH } from './config.js'
+import { TELEGRAM_BOT_TOKEN, ALLOWED_CHAT_ID, MAX_MESSAGE_LENGTH, setAllowedChatId } from './config.js'
 import {
   getSession,
   setSession,
@@ -42,7 +42,7 @@ async function handleMessage(
 
   await sendTyping()
   const { text, newSessionId } = await runAgent(fullMessage, sessionId, () => {
-    sendTyping().catch(() => {})
+    sendTyping().catch(() => { })
   })
 
   if (newSessionId) {
@@ -74,10 +74,18 @@ export function createBot(): Bot {
 
   // ── /start ──────────────────────────────────────────────────────────────────
   bot.command('start', async (ctx) => {
+    if (!ALLOWED_CHAT_ID) {
+      // First run: auto-register this chat
+      setAllowedChatId(String(ctx.chat.id))
+      logger.info({ chatId: ctx.chat.id }, 'Auto-registered chat ID')
+      await ctx.reply(
+        `Chat ID registered: <code>${ctx.chat.id}</code>\n\nMyClaw is ready. Send me anything.`,
+        { parse_mode: 'HTML' }
+      )
+      return
+    }
     if (!isAuthorised(ctx.chat.id)) return
-    await ctx.reply(
-      'MyClaw is running.\n\nSend me anything. Use /chatid to get your chat ID.'
-    )
+    await ctx.reply('MyClaw is running.\n\nSend me anything.')
   })
 
   // ── /chatid ─────────────────────────────────────────────────────────────────
@@ -187,7 +195,7 @@ export function createBot(): Bot {
       )
     } catch (err) {
       logger.error({ err }, 'Text message handler error')
-      await ctx.reply('Something went wrong. Check the logs.').catch(() => {})
+      await ctx.reply('Something went wrong. Check the logs.').catch(() => { })
     }
   })
 
@@ -202,7 +210,7 @@ export function createBot(): Bot {
       await handleMessage(ctx.chat.id, msgText, (text, opts) => ctx.reply(text, opts), sendTyping)
     } catch (err) {
       logger.error({ err }, 'Photo handler error')
-      await ctx.reply('Failed to process photo.').catch(() => {})
+      await ctx.reply('Failed to process photo.').catch(() => { })
     }
   })
 
@@ -217,7 +225,7 @@ export function createBot(): Bot {
       await handleMessage(ctx.chat.id, msgText, (text, opts) => ctx.reply(text, opts), sendTyping)
     } catch (err) {
       logger.error({ err }, 'Document handler error')
-      await ctx.reply('Failed to process document.').catch(() => {})
+      await ctx.reply('Failed to process document.').catch(() => { })
     }
   })
 

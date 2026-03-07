@@ -260,25 +260,14 @@ WantedBy=default.target
   }
 
   // Get chat ID
-  header('Step 7 — Get your chat ID')
+  header('Step 7 — Chat ID (auto)')
   console.log(`
-Now:
-  1. Start MyClaw if it isn't running: ${c.cyan}npm run start${c.reset}
-  2. Open Telegram and send ${c.cyan}/chatid${c.reset} to your bot
-  3. Paste the number below
-`)
+Chat ID is registered automatically!
 
-  const chatId = await ask('Your chat ID (from /chatid)')
-  if (chatId) {
-    const envPath = path.join(PROJECT_ROOT, '.env')
-    let envContent2 = readFileSync(envPath, 'utf-8')
-    envContent2 = envContent2.replace('ALLOWED_CHAT_ID=', `ALLOWED_CHAT_ID=${chatId}`)
-    writeFileSync(envPath, envContent2)
-    ok(`.env updated with ALLOWED_CHAT_ID=${chatId}`)
-    info('Restart MyClaw for this to take effect.')
-  } else {
-    warn('No chat ID entered. Edit .env manually and set ALLOWED_CHAT_ID.')
-  }
+  1. Start MyClaw: ${c.cyan}npm run start${c.reset}
+  2. Open Telegram and send ${c.cyan}/start${c.reset} to your bot
+  3. The bot will detect and save Chat ID in .env automatically
+`)
 
   // Done
   header('Setup complete!')
@@ -289,8 +278,11 @@ Next steps:
   ${c.cyan}npm run dev${c.reset}          Start in dev mode (hot reload)
   ${c.cyan}npm run status${c.reset}       Check configuration health
 
+  Then open Telegram and send ${c.cyan}/start${c.reset} to your bot.
+  Your Chat ID will be registered automatically.
+
 Scheduled tasks:
-  ${c.cyan}node dist/schedule-cli.js create "Summarize my emails" "0 9 * * *" ${chatId || 'YOUR_CHAT_ID'}${c.reset}
+  ${c.cyan}node dist/schedule-cli.js create "Summarize my emails" "0 9 * * *" YOUR_CHAT_ID${c.reset}
   ${c.cyan}node dist/schedule-cli.js list${c.reset}
 
 Personalize:
