@@ -108,7 +108,7 @@ async function main() {
 
   // ── Database ─────────────────────────────────────────────────────────────────
   console.log(`\n${c.bold}Database${c.reset}`)
-  const dbPath = path.join(PROJECT_ROOT, 'store', 'myclaw.db')
+  const dbPath = path.join(PROJECT_ROOT, 'store', 'data.db')
 
   if (existsSync(dbPath)) {
     try {
