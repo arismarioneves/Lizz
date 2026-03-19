@@ -119,7 +119,6 @@ Os dois mensageiros podem rodar simultaneamente.
 | `/start` | Inicia o bot e registra seu Chat ID |
 | `/chatid` | Mostra seu Chat ID |
 | `/newchat` | Limpa a sessão e inicia uma nova conversa |
-| `/forget` | Limpa a sessão atual |
 | `/memory` | Mostra as memórias armazenadas |
 | `/schedule list` | Lista tarefas agendadas |
 | `/schedule pause <id>` | Pausa uma tarefa |

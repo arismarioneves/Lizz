@@ -123,7 +123,6 @@ Both messengers can run simultaneously.
 | `/start` | Starts the bot and registers your Chat ID |
 | `/chatid` | Shows your Chat ID |
 | `/newchat` | Clears the session and starts a new conversation |
-| `/forget` | Clears the current session |
 | `/memory` | Shows stored memories |
 | `/schedule list` | Lists scheduled tasks |
 | `/schedule pause <id>` | Pauses a task |

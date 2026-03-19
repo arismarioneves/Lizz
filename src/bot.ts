@@ -103,13 +103,6 @@ export function createBot(): Bot {
     await ctx.reply('Session cleared. Starting fresh.')
   })
 
-  // ── /forget ──────────────────────────────────────────────────────────────────
-  bot.command('forget', async (ctx) => {
-    if (!isAuthorised(ctx.chat.id)) return
-    clearSession(String(ctx.chat.id))
-    await ctx.reply('Session cleared.')
-  })
-
   // ── /memory ──────────────────────────────────────────────────────────────────
   bot.command('memory', async (ctx) => {
     if (!isAuthorised(ctx.chat.id)) return
