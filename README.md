@@ -101,11 +101,28 @@ Done! Open Telegram or Slack and send a message to your bot.
 
 1. Go to [api.slack.com/apps](https://api.slack.com/apps) and create a new app
 2. Enable **Socket Mode** and generate an App-Level Token (`SLACK_APP_TOKEN`, scope: `connections:write`)
-3. Add a bot token scope: `chat:write`, `app_mentions:read`, `im:history`
+3. Add the following **Bot Token Scopes** (OAuth & Permissions):
+
+   | Scope | Purpose |
+   |-------|---------|
+   | `chat:write` | Send messages |
+   | `app_mentions:read` | Receive @mentions in channels |
+   | `commands` | Slash commands |
+   | `im:history` | Read DMs |
+   | `im:read` | List DMs |
+   | `im:write` | Open DMs |
+   | `channels:read` | Read public channel info |
+   | `channels:history` | Read messages in public channels |
+   | `groups:history` | Read messages in **private channels** |
+   | `groups:read` | List private channels |
+   | `files:read` | Download files and images sent to the bot |
+
 4. Install the app to your workspace and copy the **Bot Token** (`SLACK_BOT_TOKEN`)
-5. Enable the **Event Subscriptions**: `message.im` and `app_mention`
+5. Enable the **Event Subscriptions**: `message.im`, `message.channels`, `message.groups`, and `app_mention`
 6. Add the `/newchat` slash command pointing to your app
 7. Set `SLACK_BOT_TOKEN`, `SLACK_APP_TOKEN`, and `SLACK_SIGNING_SECRET` in `.env`
+
+> After adding new scopes, Slack requires reinstalling the app to the workspace.
 
 Both messengers can run simultaneously.
 
@@ -224,10 +241,12 @@ You can edit this file at any time. Changes take effect on the next message.
 
 ## Media Support
 
-Via Telegram, the bot accepts:
+The bot accepts photos and documents on both messengers:
 
 - 📷 **Photos** — Send an image and Claude will analyze it
 - 📄 **Documents** — Send files for Claude to process
+
+> For Slack, the bot requires the `files:read` scope to download files.
 
 ---
 
