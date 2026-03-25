@@ -4,12 +4,12 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node --no-warnings dist/index.js",
     "dev": "tsx src/index.ts",
     "setup": "tsx scripts/setup.ts",
     "status": "tsx scripts/status.ts",
     "test": "vitest run",
-    "test:db": "node --no-warnings --import tsx/esm src/db.test.ts",
+    "test:db": "node --import tsx/esm src/db.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {
