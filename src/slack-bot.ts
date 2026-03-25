@@ -23,17 +23,54 @@ function isAuthorised(userId: string): boolean {
   return userId === ALLOWED_SLACK_USER_ID
 }
 
+// ─── Reactions ────────────────────────────────────────────────────────────────
+
+const REACTION_THINKING = 'eyes'
+const REACTION_DONE = 'white_check_mark'
+
+async function addReaction(
+  client: SlackApp['client'],
+  channel: string,
+  timestamp: string,
+  name: string
+): Promise<void> {
+  try {
+    await client.reactions.add({ channel, timestamp, name })
+  } catch {
+    // ignore — reaction may already exist or permission denied
+  }
+}
+
+async function removeReaction(
+  client: SlackApp['client'],
+  channel: string,
+  timestamp: string,
+  name: string
+): Promise<void> {
+  try {
+    await client.reactions.remove({ channel, timestamp, name })
+  } catch {
+    // ignore — reaction may not exist
+  }
+}
+
 // ─── Core handler ─────────────────────────────────────────────────────────────
 
 async function handleMessage(
   channelId: string,
   userId: string,
   rawText: string,
-  say: (msg: string) => Promise<unknown>
+  say: (msg: string) => Promise<unknown>,
+  client?: SlackApp['client'],
+  messageTs?: string
 ): Promise<void> {
   if (!isAuthorised(userId)) {
     logger.warn({ userId }, 'Unauthorised Slack message ignored')
     return
+  }
+
+  if (client && messageTs) {
+    await addReaction(client, channelId, messageTs, REACTION_THINKING)
   }
 
   const connectionCtx = buildConnectionsContext()
@@ -59,6 +96,11 @@ async function handleMessage(
   for (const chunk of chunks) {
     await say(chunk)
   }
+
+  if (client && messageTs) {
+    await removeReaction(client, channelId, messageTs, REACTION_THINKING)
+    await addReaction(client, channelId, messageTs, REACTION_DONE)
+  }
 }
 
 // ─── App factory ──────────────────────────────────────────────────────────────
@@ -83,7 +125,7 @@ export function createSlackApp(): SlackApp {
   })
 
   // ── Direct messages ─────────────────────────────────────────────────────────
-  app.message(async ({ message, say }) => {
+  app.message(async ({ message, say, client }) => {
     const msg = message as unknown as Record<string, unknown>
 
     // Ignore bot messages, edits, deletes (allow file_share)
@@ -93,6 +135,7 @@ export function createSlackApp(): SlackApp {
 
     const userId = msg['user'] as string | undefined
     const channelId = msg['channel'] as string | undefined
+    const messageTs = msg['ts'] as string | undefined
     const text = (msg['text'] as string | undefined) ?? ''
     const files = (msg['files'] as Array<Record<string, unknown>> | undefined) ?? []
 
@@ -136,7 +179,7 @@ export function createSlackApp(): SlackApp {
       }
 
       logger.debug({ channelId, promptLength: combined.length }, 'Sending to agent')
-      await handleMessage(channelId, userId, combined, (m) => say(m))
+      await handleMessage(channelId, userId, combined, (m) => say(m), client, messageTs)
     } catch (err) {
       logger.error({ err }, 'Slack message handler error')
       await say('Something went wrong processing your request.').catch(() => { })
@@ -144,9 +187,10 @@ export function createSlackApp(): SlackApp {
   })
 
   // ── App mentions (@bot in channels) ─────────────────────────────────────────
-  app.event('app_mention', async ({ event, say }) => {
+  app.event('app_mention', async ({ event, say, client }) => {
     const userId = event.user ?? ''
     const channelId = event.channel
+    const messageTs = event.ts
     // Strip the bot mention tag from the text
     const text = event.text.replace(/<@[A-Z0-9]+>/g, '').trim()
 
@@ -155,7 +199,7 @@ export function createSlackApp(): SlackApp {
     logger.info({ userId, channelId }, 'Slack app mention')
 
     try {
-      await handleMessage(channelId, userId, text, (m) => say(m))
+      await handleMessage(channelId, userId, text, (m) => say(m), client, messageTs)
     } catch (err) {
       logger.error({ err }, 'Slack mention handler error')
       await say('Something went wrong processing your request.').catch(() => { })

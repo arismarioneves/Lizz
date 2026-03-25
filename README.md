@@ -116,6 +116,7 @@ Done! Open Telegram or Slack and send a message to your bot.
    | `groups:history` | Read messages in **private channels** |
    | `groups:read` | List private channels |
    | `files:read` | Download files and images sent to the bot |
+   | `reactions:write` | Add emoji reactions for processing feedback |
 
 4. Install the app to your workspace and copy the **Bot Token** (`SLACK_BOT_TOKEN`)
 5. Enable the **Event Subscriptions**: `message.im`, `message.channels`, `message.groups`, and `app_mention`
