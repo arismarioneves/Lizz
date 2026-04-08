@@ -17,6 +17,41 @@
 
 ---
 
+## Quick Install
+
+**Windows**
+
+```powershell
+powershell -ExecutionPolicy Bypass -c "irm https://raw.githubusercontent.com/arismarioneves/Lizz/main/install.ps1 | iex"
+```
+
+**macOS / Linux**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/arismarioneves/Lizz/main/install.sh | bash
+```
+
+The installer will:
+- ✅ Check Node.js (>= 20) and Git — install via `winget` / `nvm` / `brew` if missing
+- ✅ Clone Lizz to `~/.lizz`
+- ✅ Build the project
+- ✅ Register the `lizz` command globally in your PATH
+- ✅ Launch the setup wizard automatically
+
+After install, use `lizz` from any directory:
+
+```bash
+lizz           # start the bot (default)
+lizz start     # start the bot
+lizz stop      # stop the bot
+lizz status    # check health and configuration
+lizz setup     # reconfigure tokens and connections
+```
+
+> Re-running the installer updates Lizz to the latest version while preserving your `.env`.
+
+---
+
 ## What is Lizz?
 
 Lizz is a **lightweight, simplified** version of OpenClaw. It connects **Claude Code** to **Telegram** and/or **Slack**, letting you remotely control your computer from anywhere, straight from chat.
@@ -51,40 +86,21 @@ At least one messenger (Telegram or Slack) must be configured.
 
 ## Installation
 
-### 1. Clone the repository
+### Quick Install (recommended)
+
+See [Quick Install](#quick-install) above — one command, done.
+
+### Manual Install
 
 ```bash
-git clone https://github.com/ae8/Lizz.git
+git clone https://github.com/arismarioneves/Lizz.git
 cd Lizz
-```
-
-### 2. Install dependencies
-
-```bash
 npm install
-```
-
-### 3. Run the interactive setup
-
-```bash
 npm run setup
-```
-
-The setup will:
-- ✅ Check that Node.js and Claude CLI are installed
-- ✅ Build the project (TypeScript → JavaScript)
-- ✅ Ask for your Telegram **bot token**
-- ✅ Open `LIZZ.md` for you to personalize the assistant
-- ✅ Create the `.env` file with your configuration
-- ✅ Offer to install as a background service (optional)
-
-### 4. Start the bot
-
-```bash
 npm run start
 ```
 
-Done! Open Telegram or Slack and send a message to your bot.
+The setup wizard will guide you through configuring messengers, connections, and the background service.
 
 ---
 
@@ -153,6 +169,18 @@ Both messengers can run simultaneously.
 | DM the bot | Send a direct message |
 
 ### Terminal
+
+**Global CLI** (available after install):
+
+| Command | Description |
+|---------|-------------|
+| `lizz` | Start the bot (same as `lizz start`) |
+| `lizz start` | Start the bot |
+| `lizz stop` | Stop the bot |
+| `lizz status` | Check configuration health |
+| `lizz setup` | Run the setup wizard |
+
+**Dev mode** (inside the project directory):
 
 | Command | Description |
 |---------|-------------|
@@ -271,6 +299,7 @@ The bot accepts photos and documents on both messengers:
 Lizz/
 ├── src/
 │   ├── index.ts            # Entry point
+│   ├── cli.ts              # Global CLI (lizz start/stop/status/setup)
 │   ├── bot.ts              # Telegram bot logic (grammY)
 │   ├── slack-bot.ts        # Slack bot logic (@slack/bolt)
 │   ├── agent.ts            # Claude Code integration
@@ -281,6 +310,8 @@ Lizz/
 │   ├── media.ts            # Media download and processing
 │   ├── format.ts           # Message formatting (Telegram HTML + Slack mrkdwn)
 │   ├── logger.ts           # Logger (pino)
+│   ├── setup.ts            # Interactive setup wizard
+│   ├── status.ts           # Health checker
 │   └── connections/
 │       ├── index.ts        # Connection manager
 │       └── jira/
@@ -291,9 +322,9 @@ Lizz/
 │   ├── github/instructions.md
 │   └── local-repo/instructions.md
 ├── scripts/
-│   ├── setup.ts            # Interactive setup wizard
-│   ├── status.ts           # Health checker
 │   └── notify.sh           # Notification script
+├── install.ps1             # Windows one-liner installer
+├── install.sh              # Linux/macOS one-liner installer
 ├── LIZZ.md                 # Assistant personality and instructions
 ├── .env.example            # Environment variables example
 ├── package.json
@@ -333,20 +364,6 @@ Lizz/
 |----------|:--------:|-------------|
 | `ANTHROPIC_API_KEY` | ❌ | Anthropic API key (optional, uses `claude login` by default) |
 | `LOG_LEVEL` | ❌ | Log level: `trace`, `debug`, `info`, `warn`, `error` (default: `info`) |
-
----
-
-## Quick Start
-
-```bash
-git clone https://github.com/ae8/Lizz.git
-cd Lizz
-npm install
-npm run setup
-npm run start
-```
-
-5 commands. That's it.
 
 ---
 

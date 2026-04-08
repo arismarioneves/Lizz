@@ -13,6 +13,41 @@
 
 ---
 
+## Instalação rápida
+
+**Windows**
+
+```powershell
+powershell -ExecutionPolicy Bypass -c "irm https://raw.githubusercontent.com/arismarioneves/Lizz/main/install.ps1 | iex"
+```
+
+**macOS / Linux**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/arismarioneves/Lizz/main/install.sh | bash
+```
+
+O instalador vai:
+- ✅ Verificar Node.js (>= 20) e Git — instalar via `winget` / `nvm` / `brew` se necessário
+- ✅ Clonar o Lizz em `~/.lizz`
+- ✅ Compilar o projeto
+- ✅ Registrar o comando `lizz` globalmente no PATH
+- ✅ Iniciar o assistente de configuração automaticamente
+
+Após a instalação, use `lizz` de qualquer diretório:
+
+```bash
+lizz           # inicia o bot (padrão)
+lizz start     # inicia o bot
+lizz stop      # para o bot
+lizz status    # verifica saúde e configuração
+lizz setup     # reconfigura tokens e conexões
+```
+
+> Rodar o instalador novamente atualiza o Lizz para a versão mais recente, preservando seu `.env`.
+
+---
+
 ## O que é o Lizz?
 
 Lizz é uma versão **lite e simplificada** do OpenClaw. Ele conecta o **Claude Code** ao **Telegram** e/ou **Slack**, permitindo que você controle seu computador remotamente de qualquer lugar, direto pelo chat.
@@ -47,40 +82,21 @@ Pelo menos um mensageiro (Telegram ou Slack) deve ser configurado.
 
 ## Instalação
 
-### 1. Clone o repositório
+### Instalação rápida (recomendada)
+
+Veja [Instalação rápida](#instalação-rápida) acima — um comando, pronto.
+
+### Instalação manual
 
 ```bash
-git clone https://github.com/ae8/Lizz.git
+git clone https://github.com/arismarioneves/Lizz.git
 cd Lizz
-```
-
-### 2. Instale as dependências
-
-```bash
 npm install
-```
-
-### 3. Execute o setup interativo
-
-```bash
 npm run setup
-```
-
-O setup vai:
-- ✅ Verificar se o Node.js e o Claude CLI estão instalados
-- ✅ Compilar o projeto (TypeScript → JavaScript)
-- ✅ Pedir o **token do bot** do Telegram
-- ✅ Abrir o arquivo `LIZZ.md` para você personalizar o assistente
-- ✅ Criar o arquivo `.env` com suas configurações
-- ✅ Oferecer instalação como serviço em background (opcional)
-
-### 4. Inicie o bot
-
-```bash
 npm run start
 ```
 
-Pronto! Abra o Telegram ou Slack e mande uma mensagem para o seu bot.
+O assistente de configuração vai guiar você pelos mensageiros, conexões e serviço em background.
 
 ---
 
@@ -112,6 +128,7 @@ Pronto! Abra o Telegram ou Slack e mande uma mensagem para o seu bot.
    | `groups:history` | Ler mensagens em **canais privados** |
    | `groups:read` | Listar canais privados |
    | `files:read` | Baixar arquivos e imagens enviados ao bot |
+   | `reactions:write` | Adicionar reações emoji como feedback de processamento |
 
 4. Instale o app no workspace e copie o **Bot Token** (`SLACK_BOT_TOKEN`)
 5. Habilite as **Event Subscriptions**: `message.im`, `message.channels`, `message.groups` e `app_mention`
@@ -148,6 +165,18 @@ Os dois mensageiros podem rodar simultaneamente.
 | DM para o bot | Envie uma mensagem direta |
 
 ### Terminal
+
+**CLI global** (disponível após a instalação):
+
+| Comando | O que faz |
+|---------|-----------|
+| `lizz` | Inicia o bot (igual a `lizz start`) |
+| `lizz start` | Inicia o bot |
+| `lizz stop` | Para o bot |
+| `lizz status` | Verifica saúde e configuração |
+| `lizz setup` | Executa o assistente de configuração |
+
+**Modo dev** (dentro do diretório do projeto):
 
 | Comando | O que faz |
 |---------|-----------|
@@ -266,6 +295,7 @@ O bot aceita fotos e documentos nos dois mensageiros:
 Lizz/
 ├── src/
 │   ├── index.ts            # Ponto de entrada
+│   ├── cli.ts              # CLI global (lizz start/stop/status/setup)
 │   ├── bot.ts              # Lógica do bot Telegram (grammY)
 │   ├── slack-bot.ts        # Lógica do bot Slack (@slack/bolt)
 │   ├── agent.ts            # Integração com Claude Code
@@ -276,6 +306,8 @@ Lizz/
 │   ├── media.ts            # Download e processamento de mídia
 │   ├── format.ts           # Formatação de mensagens (Telegram HTML + Slack mrkdwn)
 │   ├── logger.ts           # Logger (pino)
+│   ├── setup.ts            # Assistente de instalação interativo
+│   ├── status.ts           # Verificador de saúde
 │   └── connections/
 │       ├── index.ts        # Gerenciador de conexões
 │       └── jira/
@@ -286,9 +318,9 @@ Lizz/
 │   ├── github/instructions.md
 │   └── local-repo/instructions.md
 ├── scripts/
-│   ├── setup.ts            # Assistente de instalação interativo
-│   ├── status.ts           # Verificador de saúde
 │   └── notify.sh           # Script de notificação
+├── install.ps1             # Instalador Windows (one-liner)
+├── install.sh              # Instalador Linux/macOS (one-liner)
 ├── LIZZ.md                 # Personalidade e instruções do assistente
 ├── .env.example            # Exemplo de variáveis de ambiente
 ├── package.json
@@ -328,20 +360,6 @@ Lizz/
 |----------|:-----------:|-----------|
 | `ANTHROPIC_API_KEY` | ❌ | Chave da API Anthropic (opcional, usa `claude login` por padrão) |
 | `LOG_LEVEL` | ❌ | Nível de log: `trace`, `debug`, `info`, `warn`, `error` (padrão: `info`) |
-
----
-
-## Resumo rápido
-
-```bash
-git clone https://github.com/ae8/Lizz.git
-cd Lizz
-npm install
-npm run setup
-npm run start
-```
-
-5 comandos. É isso.
 
 ---
 

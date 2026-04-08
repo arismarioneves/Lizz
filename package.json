@@ -6,8 +6,9 @@
     "build": "tsc",
     "start": "node --no-warnings dist/index.js",
     "dev": "tsx src/index.ts",
-    "setup": "tsx scripts/setup.ts",
-    "status": "tsx scripts/status.ts",
+    "setup": "tsx src/setup.ts",
+    "status": "tsx src/status.ts",
+    "cli": "tsx src/cli.ts",
     "test": "vitest run",
     "test:db": "node --import tsx/esm src/db.test.ts",
     "typecheck": "tsc --noEmit"

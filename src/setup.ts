@@ -256,7 +256,8 @@ async function main() {
 </plist>`
       writeFileSync(plistPath, plistContent)
       try {
-        execSync(`launchctl unload "${plistPath}" 2>/dev/null; launchctl load "${plistPath}"`, { shell: true })
+        try { execSync(`launchctl unload "${plistPath}"`, { stdio: 'ignore' }) } catch { /* not loaded yet */ }
+        execSync(`launchctl load "${plistPath}"`, { stdio: 'inherit' })
         ok('launchd service installed and started')
         info('Logs: /tmp/lizz.log')
         info(`Stop:  launchctl unload "${plistPath}"`)
@@ -285,7 +286,9 @@ WantedBy=default.target
 `
       writeFileSync(servicePath, serviceContent)
       try {
-        execSync('systemctl --user daemon-reload && systemctl --user enable lizz && systemctl --user start lizz', { shell: true })
+        execSync('systemctl --user daemon-reload', { stdio: 'inherit' })
+        execSync('systemctl --user enable lizz', { stdio: 'inherit' })
+        execSync('systemctl --user start lizz', { stdio: 'inherit' })
         ok('systemd service installed and started')
         info('Logs: journalctl --user -u lizz -f')
         info('Stop:  systemctl --user stop lizz')
