@@ -39,6 +39,19 @@ function ask(question: string, defaultVal = ''): Promise<string> {
   })
 }
 
+function askYN(question: string, defaultVal: 'y' | 'n'): Promise<boolean> {
+  const hint =
+    defaultVal === 'y'
+      ? `${c.dim}[${c.reset}${c.bold}Y${c.reset}${c.dim}/n]${c.reset}`
+      : `${c.dim}[y/${c.reset}${c.bold}N${c.reset}${c.dim}]${c.reset}`
+  return new Promise((resolve) => {
+    rl.question(`${question} ${hint}: `, (answer: string) => {
+      const t = answer.trim().toLowerCase()
+      resolve(t ? t === 'y' || t === 'yes' : defaultVal === 'y')
+    })
+  })
+}
+
 function askSecret(question: string): Promise<string> {
   return new Promise((resolve) => {
     process.stdout.write(`${question}: `)
@@ -130,13 +143,13 @@ async function main() {
   console.log(`  Requires a Slack app with Socket Mode enabled.`)
   console.log(`  Create one at ${c.cyan}api.slack.com/apps${c.reset}\n`)
 
-  const setupSlack = await ask('Configure Slack?', 'n')
+  const setupSlack = await askYN('Configure Slack?', 'n')
   let slackBotToken = ''
   let slackAppToken = ''
   let slackSigningSecret = ''
   let allowedSlackUserId = ''
 
-  if (setupSlack.toLowerCase() === 'y') {
+  if (setupSlack) {
     slackBotToken = await askSecret('SLACK_BOT_TOKEN (xoxb-...)')
     slackAppToken = await askSecret('SLACK_APP_TOKEN (xapp-...)')
     slackSigningSecret = await askSecret('SLACK_SIGNING_SECRET (optional, press Enter to skip)')
@@ -155,12 +168,12 @@ async function main() {
 
   // Jira
   console.log(`${c.bold}Jira${c.reset}`)
-  const setupJira = await ask('Configure Jira?', 'n')
+  const setupJira = await askYN('Configure Jira?', 'n')
   let jiraHost = ''
   let jiraEmail = ''
   let jiraApiToken = ''
 
-  if (setupJira.toLowerCase() === 'y') {
+  if (setupJira) {
     jiraHost = await ask('JIRA_HOST (e.g. mycompany.atlassian.net)')
     jiraEmail = await ask('JIRA_EMAIL')
     jiraApiToken = await askSecret('JIRA_API_TOKEN')
@@ -216,9 +229,9 @@ async function main() {
 
   // ── Step 6: Background service ────────────────────────────────────────────
   header('Step 6 — Background service')
-  const installService = await ask('Install as background service (auto-start on boot)?', 'y')
+  const installService = await askYN('Install as background service (auto-start on boot)?', 'y')
 
-  if (installService.toLowerCase() === 'y') {
+  if (installService) {
     const platform = os.platform()
 
     if (platform === 'darwin') {
@@ -306,7 +319,7 @@ WantedBy=default.target
 `)
     }
   } else {
-    info('Skipping service install. Run manually with: npm run start')
+    info('Skipping service install. Run manually with: lizz start')
   }
 
   // ── Step 7: Done ──────────────────────────────────────────────────────────
@@ -328,9 +341,11 @@ WantedBy=default.target
 Messengers: ${c.cyan}${messengers}${c.reset}${connections.length ? `\nConnections: ${c.cyan}${connections.join(', ')}${c.reset}` : ''}
 
 Next steps:
-  ${c.cyan}npm run start${c.reset}        Start the bot
-  ${c.cyan}npm run dev${c.reset}          Start in dev mode (hot reload)
-  ${c.cyan}npm run status${c.reset}       Check configuration health
+  ${c.cyan}lizz${c.reset}                 Start the bot
+  ${c.cyan}lizz start${c.reset}           Start the bot
+  ${c.cyan}lizz stop${c.reset}            Stop the bot
+  ${c.cyan}lizz status${c.reset}          Check health and configuration
+  ${c.cyan}lizz setup${c.reset}           Reconfigure at any time
 ${telegramToken ? `
   Then open Telegram and send ${c.cyan}/start${c.reset} to your bot.
   Your Chat ID will be registered automatically.` : ''}
