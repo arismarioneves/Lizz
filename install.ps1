@@ -85,7 +85,23 @@ if ($userPath -notlike "*\.lizz*") {
     [Environment]::SetEnvironmentVariable("Path", "$userPath;$INSTALL_DIR", "User")
     Write-Host "        Added to user PATH" -ForegroundColor DarkGray
 }
-Refresh-EnvPath
+
+# Add to PowerShell profile so every new session picks it up (same as .bashrc on Linux)
+$profileLine = "`$env:Path += `";$INSTALL_DIR`""
+try {
+    $profileDir = Split-Path $PROFILE
+    if (-not (Test-Path $profileDir)) { New-Item -ItemType Directory -Force -Path $profileDir | Out-Null }
+    if (-not (Test-Path $PROFILE))    { New-Item -ItemType File      -Force -Path $PROFILE    | Out-Null }
+    $existing = Get-Content $PROFILE -Raw -ErrorAction SilentlyContinue
+    if (-not $existing -or -not $existing.Contains($INSTALL_DIR)) {
+        Add-Content $PROFILE "`n# Lizz`n$profileLine"
+        Write-Host "        Added to PowerShell profile" -ForegroundColor DarkGray
+    }
+} catch {}
+
+# Apply to current session immediately
+$env:Path += ";$INSTALL_DIR"
+
 Write-Host "  [5/5] Launcher created" -ForegroundColor Green
 
 # ── Done ──────────────────────────────────────────────────────────────────────
