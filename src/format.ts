@@ -1,4 +1,20 @@
+import { Marked } from 'marked'
+import { markedTerminal } from 'marked-terminal'
 import { MAX_MESSAGE_LENGTH } from './config.js'
+
+// ─── TUI formatting ─────────────────────────────────────────────────────────
+
+const tuiMarked = new Marked()
+tuiMarked.use(markedTerminal())
+
+/**
+ * Convert Markdown text to ANSI-styled terminal output.
+ * Uses marked-terminal for rendering with syntax highlighting via cli-highlight.
+ */
+export function formatForTui(text: string): string {
+  const result = tuiMarked.parse(text) as string
+  return result.trimEnd()
+}
 
 function escapeHtml(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')

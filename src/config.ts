@@ -53,3 +53,6 @@ export const LOCAL_REPO_PATH = env['LOCAL_REPO_PATH'] ?? ''
 
 // GitHub repository (owner/repo). Enables the GitHub connection.
 export const GITHUB_REPO = env['GITHUB_REPO'] ?? ''
+
+// ─── TUI ─────────────────────────────────────────────────────────────────────
+export const TUI_CHAT_ID = 'tui'

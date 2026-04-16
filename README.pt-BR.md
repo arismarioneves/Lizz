@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <b>Controle seu computador pelo Telegram ou Slack usando Claude Code.</b><br>
+  <b>Controle seu computador pelo Telegram, Slack ou Terminal usando Claude Code.</b><br>
   Simples. Leve. Sem complicação.
 </p>
 
@@ -29,7 +29,7 @@ curl -fsSL https://raw.githubusercontent.com/arismarioneves/Lizz/main/install.sh
 
 O instalador vai:
 - ✅ Verificar Node.js (>= 20) e Git — instalar via `winget` / `nvm` / `brew` se necessário
-- ✅ Clonar o Lizz em `~/.lizz`
+- ✅ Clonar a Lizz em `~/.lizz`
 - ✅ Compilar o projeto
 - ✅ Registrar o comando `lizz` globalmente no PATH
 - ✅ Iniciar o assistente de configuração automaticamente
@@ -39,29 +39,30 @@ Após a instalação, use `lizz` de qualquer diretório:
 ```bash
 lizz           # inicia o bot (padrão)
 lizz start     # inicia o bot
+lizz tui       # chat interativo no terminal
 lizz stop      # para o bot
 lizz status    # verifica saúde e configuração
 lizz setup     # reconfigura tokens e conexões
 ```
 
-> Rodar o instalador novamente atualiza o Lizz para a versão mais recente, preservando seu `.env`.
+> Rodar o instalador novamente atualiza a Lizz para a versão mais recente, preservando seu `.env`.
 
 ---
 
-## O que é o Lizz?
+## O que é a Lizz?
 
-Lizz é uma versão **lite e simplificada** do OpenClaw. Ele conecta o **Claude Code** ao **Telegram** e/ou **Slack**, permitindo que você controle seu computador remotamente de qualquer lugar, direto pelo chat.
+Lizz é uma versão **lite e simplificada** do OpenClaw. Ele conecta o **Claude Code** ao **Telegram**, **Slack** ou a um **Terminal UI (TUI)**, permitindo que você controle seu computador remotamente de qualquer lugar — pelo chat ou direto no terminal.
 
 O projeto reutiliza o ambiente seguro do Claude Code (skills, sessões e coworking), mas com um bypass de permissões que dá acesso total ao sistema, não apenas a pasta do coworking.
 
 ### Como funciona?
 
 ```
-Você (Telegram ou Slack) → Bot Lizz → Claude Code → Seu computador
+Você (Telegram, Slack ou Terminal) → Lizz → Claude Code → Seu computador
 ```
 
-1. Você envia uma mensagem no Telegram ou Slack
-2. O bot repassa para o Claude Code
+1. Você envia uma mensagem no Telegram, Slack ou TUI
+2. A Lizz repassa para o Claude Code
 3. O Claude executa a ação no seu computador
 4. A resposta volta para o seu chat
 
@@ -76,7 +77,7 @@ Você (Telegram ou Slack) → Bot Lizz → Claude Code → Seu computador
 | **Telegram** | Uma conta + bot criado pelo [@BotFather](https://t.me/BotFather) *(opcional)* |
 | **Slack** | Um app Slack com Socket Mode habilitado *(opcional)* |
 
-Pelo menos um mensageiro (Telegram ou Slack) deve ser configurado.
+Pelo menos uma interface deve estar disponível. Você pode usar `lizz tui` sem nenhum mensageiro configurado.
 
 ---
 
@@ -137,7 +138,24 @@ O assistente de configuração vai guiar você pelos mensageiros, conexões e se
 
 > Após adicionar novos escopos, o Slack exige que o app seja **reinstalado** no workspace.
 
-Os dois mensageiros podem rodar simultaneamente.
+### TUI (Terminal)
+
+Não precisa de configuração. Basta rodar:
+
+```bash
+lizz tui
+```
+
+O TUI inicia um chat interativo direto no terminal. O agente trabalha no diretório onde você executou o comando — sem necessidade de `LOCAL_REPO_PATH`.
+
+Recursos:
+- Renderização de Markdown com syntax highlighting nos blocos de código
+- Spinner enquanto o agente está pensando
+- Autocomplete para comandos `/` com Tab
+- Histórico de input (setas para cima/baixo)
+- Salvar conversas em arquivo (`Ctrl+S`)
+
+Os mensageiros e o TUI podem ser usados de forma independente ou em conjunto.
 
 ---
 
@@ -164,6 +182,31 @@ Os dois mensageiros podem rodar simultaneamente.
 | `@bot <mensagem>` | Mencione o bot em qualquer canal |
 | DM para o bot | Envie uma mensagem direta |
 
+### TUI (Chat no Terminal)
+
+| Comando | O que faz |
+|---------|-----------|
+| `/newchat` | Limpa a sessão e inicia uma nova conversa |
+| `/memory` | Mostra as memórias armazenadas |
+| `/schedule list` | Lista tarefas agendadas |
+| `/schedule pause <id>` | Pausa uma tarefa |
+| `/schedule resume <id>` | Retoma uma tarefa pausada |
+| `/schedule delete <id>` | Deleta uma tarefa |
+| `/help` | Mostra comandos e atalhos disponíveis |
+| `/exit` | Sai do TUI |
+
+**Atalhos de teclado:**
+
+| Atalho | Ação |
+|--------|------|
+| `Enter` | Enviar mensagem |
+| `Ctrl+C` | Sair |
+| `Esc` | Cancelar resposta em andamento |
+| `Ctrl+L` | Limpar tela |
+| `↑ / ↓` | Navegar no histórico de input |
+| `Tab` | Autocompletar comandos |
+| `Ctrl+S` | Salvar conversa em arquivo |
+
 ### Terminal
 
 **CLI global** (disponível após a instalação):
@@ -172,6 +215,7 @@ Os dois mensageiros podem rodar simultaneamente.
 |---------|-----------|
 | `lizz` | Inicia o bot (igual a `lizz start`) |
 | `lizz start` | Inicia o bot |
+| `lizz tui` | Chat interativo no terminal |
 | `lizz stop` | Para o bot |
 | `lizz status` | Verifica saúde e configuração |
 | `lizz setup` | Executa o assistente de configuração |
@@ -304,7 +348,8 @@ Lizz/
 │   ├── memory.ts           # Sistema de memória com decay
 │   ├── scheduler.ts        # Agendador de tarefas (cron)
 │   ├── media.ts            # Download e processamento de mídia
-│   ├── format.ts           # Formatação de mensagens (Telegram HTML + Slack mrkdwn)
+│   ├── tui.ts              # Terminal UI (chat interativo)
+│   ├── format.ts           # Formatação de mensagens (Telegram HTML + Slack mrkdwn + TUI ANSI)
 │   ├── logger.ts           # Logger (pino)
 │   ├── setup.ts            # Assistente de instalação interativo
 │   ├── status.ts           # Verificador de saúde

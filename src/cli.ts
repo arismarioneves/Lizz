@@ -150,6 +150,7 @@ ${c.bold}Usage:${c.reset}
 
 ${c.bold}Commands:${c.reset}
   ${c.cyan}start${c.reset}    Start the bot (default when no command given)
+  ${c.cyan}tui${c.reset}      Interactive terminal chat
   ${c.cyan}stop${c.reset}     Stop the bot
   ${c.cyan}status${c.reset}   Show running state and configuration
   ${c.cyan}setup${c.reset}    Run the configuration wizard
@@ -189,6 +190,9 @@ if (isMain) {
       break
     case 'update':
       cmdUpdate()
+      break
+    case 'tui':
+      spawnChild('tui.js')
       break
     case 'help':
     case '--help':

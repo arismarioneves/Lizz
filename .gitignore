@@ -1,7 +1,13 @@
 node_modules/
 dist/
-.env
 store/
 workspace/
+.env
 *.log
 *.pid
+
+# Brainstorm sessions
+.superpowers/
+
+# Conversations files
+chats/

@@ -20,8 +20,13 @@
     "@anthropic-ai/claude-agent-sdk": "latest",
     "@slack/bolt": "^4.6.0",
     "axios": "^1.13.6",
+    "chalk": "^5.6.2",
+    "cli-highlight": "^2.1.11",
     "cron-parser": "^4.9.0",
     "grammy": "^1.21.1",
+    "marked": "^15.0.12",
+    "marked-terminal": "^7.3.0",
+    "ora": "^9.3.0",
     "pino": "^8.19.0",
     "pino-pretty": "^11.0.0"
   },

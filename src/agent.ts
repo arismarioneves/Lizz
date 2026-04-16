@@ -10,7 +10,8 @@ export interface AgentResult {
 export async function runAgent(
   message: string,
   sessionId?: string,
-  onTyping?: () => void
+  onTyping?: () => void,
+  cwd?: string
 ): Promise<AgentResult> {
   let text: string | null = null
   let newSessionId: string | undefined
@@ -24,7 +25,7 @@ export async function runAgent(
     for await (const event of query({
       prompt: message,
       options: {
-        cwd: PROJECT_ROOT,
+        cwd: cwd ?? PROJECT_ROOT,
         settingSources: ['project', 'user'],
         permissionMode: 'bypassPermissions',
         allowDangerouslySkipPermissions: true,
