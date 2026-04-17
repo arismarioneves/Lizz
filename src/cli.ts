@@ -127,6 +127,17 @@ function cmdUpdate(): void {
     process.exit(1)
   }
 
+  console.log(`\n  Installing dependencies...`)
+  const install = spawnSync('npm', ['install', '--silent'], {
+    cwd: LIZZ_HOME,
+    stdio: 'inherit',
+    shell: process.platform === 'win32',
+  })
+  if (install.status !== 0) {
+    console.log(`${c.red}✗${c.reset} npm install failed.`)
+    process.exit(1)
+  }
+
   console.log(`\n  Rebuilding...`)
   const build = spawnSync('npm', ['run', 'build'], {
     cwd: LIZZ_HOME,
