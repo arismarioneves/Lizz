@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lizz - Not just an agent</title>
-  <meta name="description" content="Connect Claude Code to Telegram and Slack. Control your computer from anywhere with a single command.">
+  <meta name="description" content="Connect Claude Code to Telegram, Slack, or your Terminal. Control your computer from anywhere — or directly from the command line.">
   <meta property="og:title" content="Lizz - Not just an agent">
-  <meta property="og:description" content="Connect Claude Code to Telegram and Slack. Control your computer from anywhere with a single command.">
+  <meta property="og:description" content="Connect Claude Code to Telegram, Slack, or your Terminal. Control your computer from anywhere — or directly from the command line.">
   <meta property="og:image" content="https://raw.githubusercontent.com/arismarioneves/Lizz/main/lizz.png">
   <meta property="og:url" content="https://arismarioneves.github.io/Lizz/">
   <meta name="twitter:card" content="summary">
@@ -250,7 +250,7 @@
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 4px 12px;
-      font-size: 12px;
+      font-size: 11px;
       color: var(--muted);
     }
 
@@ -460,15 +460,35 @@
       flex-shrink: 0;
     }
 
+    .flow-sources {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 130px;
+    }
+    .flow-source-node {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+    }
+    .flow-source-icon { color: var(--muted); font-size: 14px; width: 16px; text-align: center; }
+    .flow-source-label { font-size: 12px; color: var(--muted); }
+
     @media (max-width: 640px) {
       .flow { gap: 10px; }
       .flow-node { width: 120px; padding: 16px; }
       .flow-arrow { font-size: 12px; }
+      .flow-sources { width: 120px; }
     }
     @media (max-width: 480px) {
-      .flow { flex-direction: column; gap: 8px; }
+      .flow { flex-direction: column; gap: 8px; align-items: center; }
       .flow-arrow { transform: rotate(90deg); }
       .flow-node { width: 100%; max-width: 200px; }
+      .flow-sources { width: 100%; max-width: 200px; }
     }
 
     /* ── INTEGRATIONS ────────────────────────────── */
@@ -481,7 +501,7 @@
 
     .int-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 14px;
       margin-top: 36px;
     }
@@ -514,7 +534,7 @@
       line-height: 1.6;
     }
 
-    @media (max-width: 760px) {
+    @media (max-width: 860px) {
       .int-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 420px) {
@@ -650,8 +670,8 @@
         <span class="t-pt">Controle seu computador<br>de <em>qualquer lugar</em>.</span>
       </h1>
       <p class="hero-sub">
-        <span class="t-en">Send a message on Telegram or Slack. Claude Code runs on your machine. Simple as that.</span>
-        <span class="t-pt">Mande uma mensagem no Telegram ou Slack. O Claude Code executa na sua máquina. Simples assim.</span>
+        <span class="t-en">Chat via Telegram or Slack — or skip the messenger entirely and type directly in your terminal.</span>
+        <span class="t-pt">Converse via Telegram ou Slack — ou pule os mensageiros e use direto no terminal.</span>
       </p>
       <div class="hero-actions">
         <a href="#install" class="btn-primary">
@@ -667,6 +687,7 @@
       <div class="hero-badges">
         <span class="hero-badges-label t-en">Works with</span>
         <span class="hero-badges-label t-pt">Funciona com</span>
+        <span class="badge"><i class="fa-solid fa-terminal"></i> Terminal</span>
         <span class="badge"><i class="fa-brands fa-telegram"></i> Telegram</span>
         <span class="badge"><i class="fa-brands fa-slack"></i> Slack</span>
         <span class="badge"><i class="fa-solid fa-diagram-project"></i> Jira</span>
@@ -681,23 +702,22 @@
           <span class="dot dot-y"></span>
           <span class="dot dot-g"></span>
           <img src="lizz.png" alt="" style="width:14px;height:14px;border-radius:3px;margin-left:8px;opacity:.85">
-          <span class="term-title">Lizz — terminal</span>
+          <span class="term-title">lizz tui</span>
         </div>
         <div class="terminal-body">
-          <div><span class="t-prompt">~ </span><span class="t-cmd">lizz start</span></div>
-          <div class="t-ok"><i class="fa-solid fa-check"></i>&nbsp; <span class="t-en">Connected to Telegram</span><span class="t-pt">Conectado ao Telegram</span></div>
-          <div class="t-ok"><i class="fa-solid fa-check"></i>&nbsp; <span class="t-en">Claude Code ready</span><span class="t-pt">Claude Code pronto</span></div>
+          <div><span class="t-prompt">~/projects </span><span class="t-cmd">lizz tui</span></div>
+          <div style="margin:6px 0;font-family:'SF Mono','Fira Code','Cascadia Code',monospace;font-size:12px;line-height:1.17"><div><span style="color:#cc3333">&nbsp;&nbsp;██&nbsp;&nbsp;██&nbsp;&nbsp;</span></div><div><span style="color:#cc3333">&nbsp;&nbsp;██&nbsp;&nbsp;██&nbsp;&nbsp;</span><span style="color:#fff;font-weight:700"> Lizz TUI</span></div><div><span style="color:#cc3333">&nbsp;&nbsp;██&nbsp;&nbsp;██&nbsp;&nbsp;</span></div><div><span style="color:#cc3333">██&nbsp;&nbsp;██&nbsp;&nbsp;██</span></div><div><span style="color:#cc3333">██████████</span></div></div>
           <div class="t-gray" style="margin:6px 0">────────────────────────</div>
-          <div><span class="t-who"><span class="t-en">You</span><span class="t-pt">Você</span> &middot; Telegram</span></div>
-          <div class="t-you">"<span class="t-en">Summarize my open Jira tasks</span><span class="t-pt">Resuma minhas tarefas abertas no Jira</span>"</div>
-          <div style="margin-top:6px"><span class="t-ok">Lizz</span></div>
+          <div><span class="t-who"><span class="t-en">You</span><span class="t-pt">Você</span> &gt;</span></div>
+          <div class="t-you"><span class="t-en">what files changed in the last commit?</span><span class="t-pt">quais arquivos mudaram no último commit?</span></div>
+          <div style="margin-top:6px"><span class="t-ok">Lizz &gt;</span></div>
           <div class="t-reply" style="line-height:1.7">
-            "<span class="t-en">You have 3 tasks in progress:<br>&nbsp;&nbsp;• PROJ-42 — API refactor (due Thu)<br>&nbsp;&nbsp;• PROJ-38 — Fix login bug<br>&nbsp;&nbsp;• PROJ-51 — Update docs"</span>
-            <span class="t-pt">Você tem 3 tarefas em andamento:<br>&nbsp;&nbsp;• PROJ-42 — Refactor API (vence Qui)<br>&nbsp;&nbsp;• PROJ-38 — Corrigir bug de login<br>&nbsp;&nbsp;• PROJ-51 — Atualizar docs"</span>
+            <span class="t-en">3 files changed in <span style="color:#fff">a1b2c3d</span>:<br>&nbsp;&nbsp;<span style="color:#28c840">+</span> src/tui.ts &nbsp;<span style="color:#888">(new)</span><br>&nbsp;&nbsp;<span style="color:#febc2e">~</span> src/cli.ts</span>
+            <span class="t-pt">3 arquivos alterados em <span style="color:#fff">a1b2c3d</span>:<br>&nbsp;&nbsp;<span style="color:#28c840">+</span> src/tui.ts &nbsp;<span style="color:#888">(novo)</span><br>&nbsp;&nbsp;<span style="color:#febc2e">~</span> src/cli.ts</span>
           </div>
           <div class="t-gray" style="margin-top:10px">
-            <span class="t-en">Waiting for messages </span>
-            <span class="t-pt">Aguardando mensagens </span>
+            <span class="t-en">You &gt; </span>
+            <span class="t-pt">Você &gt; </span>
             <span class="t-cursor"></span>
           </div>
         </div>
@@ -790,16 +810,23 @@
       <span class="t-pt">Simples por design</span>
     </h2>
     <p class="section-sub">
-      <span class="t-en">Your message travels from chat to machine in seconds.</span>
-      <span class="t-pt">Sua mensagem vai do chat à máquina em segundos.</span>
+      <span class="t-en">Your input — from terminal, Telegram, or Slack — reaches Claude Code in seconds.</span>
+      <span class="t-pt">Seu input — do terminal, Telegram ou Slack — chega ao Claude Code em segundos.</span>
     </p>
 
     <div class="flow">
-      <div class="flow-node">
-        <div class="flow-icon"><i class="fa-brands fa-telegram"></i></div>
-        <div class="flow-label">
-          <span class="t-en">You send a message</span>
-          <span class="t-pt">Você manda uma mensagem</span>
+      <div class="flow-sources">
+        <div class="flow-source-node">
+          <span class="flow-source-icon"><i class="fa-solid fa-terminal"></i></span>
+          <span class="flow-source-label">Terminal</span>
+        </div>
+        <div class="flow-source-node">
+          <span class="flow-source-icon"><i class="fa-brands fa-telegram"></i></span>
+          <span class="flow-source-label">Telegram</span>
+        </div>
+        <div class="flow-source-node">
+          <span class="flow-source-icon"><i class="fa-brands fa-slack"></i></span>
+          <span class="flow-source-label">Slack</span>
         </div>
       </div>
       <div class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></div>
@@ -897,14 +924,14 @@
       </div>
 
       <div class="feature-card">
-        <div class="feature-icon"><i class="fa-solid fa-comments"></i></div>
+        <div class="feature-icon"><i class="fa-solid fa-layer-group"></i></div>
         <div class="feature-title">
-          <span class="t-en">Multi-Messenger</span>
-          <span class="t-pt">Multi-Messenger</span>
+          <span class="t-en">Multiple Interfaces</span>
+          <span class="t-pt">Múltiplas Interfaces</span>
         </div>
         <div class="feature-desc">
-          <span class="t-en">Telegram and Slack running simultaneously. Use whichever app you already have open — both work at the same time.</span>
-          <span class="t-pt">Telegram e Slack rodando ao mesmo tempo. Use o app que já está aberto — os dois funcionam simultaneamente.</span>
+          <span class="t-en">Use the built-in Terminal UI, Telegram, or Slack — independently or all at once. No messenger required to get started.</span>
+          <span class="t-pt">Use o Terminal UI integrado, Telegram ou Slack — independente ou todos ao mesmo tempo. Sem necessidade de mensageiro para começar.</span>
         </div>
       </div>
 
@@ -936,11 +963,19 @@
       <span class="t-pt">Conecte tudo</span>
     </h2>
     <p class="section-sub">
-      <span class="t-en">Lizz bridges your chat to the tools you already use.</span>
-      <span class="t-pt">Lizz conecta seu chat às ferramentas que você já usa.</span>
+      <span class="t-en">Use Lizz standalone in the terminal, or connect it to the tools you already use.</span>
+      <span class="t-pt">Use a Lizz standalone no terminal, ou conecte às ferramentas que você já usa.</span>
     </p>
 
     <div class="int-grid">
+      <div class="int-card" style="border-color: rgba(255,107,107,.25); background: rgba(255,107,107,.04);">
+        <div class="int-card-icon" style="color: var(--accent)"><i class="fa-solid fa-terminal"></i></div>
+        <div class="int-card-name">Terminal UI</div>
+        <div class="int-card-desc">
+          <span class="t-en">Chat directly in your terminal with markdown rendering and syntax highlighting. No messenger needed.</span>
+          <span class="t-pt">Converse direto no terminal com renderização de markdown e syntax highlighting. Sem necessidade de mensageiro.</span>
+        </div>
+      </div>
       <div class="int-card">
         <div class="int-card-icon"><i class="fa-brands fa-telegram"></i></div>
         <div class="int-card-name">Telegram</div>
@@ -971,6 +1006,17 @@
         <div class="int-card-desc">
           <span class="t-en">Create branches, commit, push and open pull requests via CLI.</span>
           <span class="t-pt">Crie branches, faça commits, push e abra pull requests via CLI.</span>
+        </div>
+      </div>
+      <div class="int-card" style="opacity:.5;pointer-events:none">
+        <div class="int-card-icon"><i class="fa-solid fa-plus"></i></div>
+        <div class="int-card-name">
+          <span class="t-en">More coming soon</span>
+          <span class="t-pt">Em breve</span>
+        </div>
+        <div class="int-card-desc">
+          <span class="t-en">More integrations are on the way.</span>
+          <span class="t-pt">Mais integrações a caminho.</span>
         </div>
       </div>
     </div>
