@@ -2,6 +2,13 @@ import { query } from '@anthropic-ai/claude-agent-sdk'
 import { PROJECT_ROOT, TYPING_REFRESH_MS } from './config.js'
 import { logger } from './logger.js'
 
+export class ClaudeDisconnectedError extends Error {
+  constructor() {
+    super('Claude Code is not authenticated or not installed')
+    this.name = 'ClaudeDisconnectedError'
+  }
+}
+
 export interface AgentResult {
   text: string | null
   newSessionId?: string
@@ -44,6 +51,9 @@ export async function runAgent(
     }
   } catch (err) {
     logger.error({ err }, 'Agent error')
+    if (err instanceof Error && err.message.includes('process exited with code 1')) {
+      throw new ClaudeDisconnectedError()
+    }
     throw err
   } finally {
     if (typingInterval) clearInterval(typingInterval)

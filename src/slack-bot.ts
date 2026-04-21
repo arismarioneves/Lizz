@@ -9,7 +9,7 @@ import {
   ALLOWED_SLACK_USER_ID,
 } from './config.js'
 import { getSession, setSession, clearSession } from './db.js'
-import { runAgent } from './agent.js'
+import { runAgent, ClaudeDisconnectedError } from './agent.js'
 import { buildMemoryContext, saveConversationTurn } from './memory.js'
 import { buildConnectionsContext } from './connections/index.js'
 import { formatForSlack, splitMessage } from './format.js'
@@ -181,8 +181,12 @@ export function createSlackApp(): SlackApp {
       logger.debug({ channelId, promptLength: combined.length }, 'Sending to agent')
       await handleMessage(channelId, userId, combined, (m) => say(m), client, messageTs)
     } catch (err) {
-      logger.error({ err }, 'Slack message handler error')
-      await say('Something went wrong processing your request.').catch(() => { })
+      if (err instanceof ClaudeDisconnectedError) {
+        await say('Claude Code is disconnected. An admin needs to run `claude /login` on the server.').catch(() => { })
+      } else {
+        logger.error({ err }, 'Slack message handler error')
+        await say('Something went wrong processing your request.').catch(() => { })
+      }
     }
   })
 
@@ -201,8 +205,12 @@ export function createSlackApp(): SlackApp {
     try {
       await handleMessage(channelId, userId, text, (m) => say(m), client, messageTs)
     } catch (err) {
-      logger.error({ err }, 'Slack mention handler error')
-      await say('Something went wrong processing your request.').catch(() => { })
+      if (err instanceof ClaudeDisconnectedError) {
+        await say('Claude Code is disconnected. An admin needs to run `claude /login` on the server.').catch(() => { })
+      } else {
+        logger.error({ err }, 'Slack mention handler error')
+        await say('Something went wrong processing your request.').catch(() => { })
+      }
     }
   })
 

@@ -10,7 +10,7 @@ import {
   resumeTask,
   deleteTask,
 } from './db.js'
-import { runAgent } from './agent.js'
+import { runAgent, ClaudeDisconnectedError } from './agent.js'
 import { buildMemoryContext, saveConversationTurn } from './memory.js'
 import { buildConnectionsContext } from './connections/index.js'
 import { downloadMedia, buildPhotoMessage, buildDocumentMessage } from './media.js'
@@ -190,8 +190,12 @@ export function createBot(): Bot {
         sendTyping
       )
     } catch (err) {
-      logger.error({ err }, 'Text message handler error')
-      await ctx.reply('Something went wrong.').catch(() => { })
+      if (err instanceof ClaudeDisconnectedError) {
+        await ctx.reply('Claude Code is disconnected. An admin needs to run `claude /login` on the server.').catch(() => { })
+      } else {
+        logger.error({ err }, 'Text message handler error')
+        await ctx.reply('Something went wrong.').catch(() => { })
+      }
     }
   })
 
@@ -205,8 +209,12 @@ export function createBot(): Bot {
       const msgText = buildPhotoMessage(localPath, ctx.message.caption)
       await handleMessage(ctx.chat.id, msgText, (text, opts) => ctx.reply(text, opts), sendTyping)
     } catch (err) {
-      logger.error({ err }, 'Photo handler error')
-      await ctx.reply('Failed to process photo.').catch(() => { })
+      if (err instanceof ClaudeDisconnectedError) {
+        await ctx.reply('Claude Code is disconnected. An admin needs to run `claude /login` on the server.').catch(() => { })
+      } else {
+        logger.error({ err }, 'Photo handler error')
+        await ctx.reply('Failed to process photo.').catch(() => { })
+      }
     }
   })
 
@@ -220,8 +228,12 @@ export function createBot(): Bot {
       const msgText = buildDocumentMessage(localPath, doc.file_name ?? 'document', ctx.message.caption)
       await handleMessage(ctx.chat.id, msgText, (text, opts) => ctx.reply(text, opts), sendTyping)
     } catch (err) {
-      logger.error({ err }, 'Document handler error')
-      await ctx.reply('Failed to process document.').catch(() => { })
+      if (err instanceof ClaudeDisconnectedError) {
+        await ctx.reply('Claude Code is disconnected. An admin needs to run `claude /login` on the server.').catch(() => { })
+      } else {
+        logger.error({ err }, 'Document handler error')
+        await ctx.reply('Failed to process document.').catch(() => { })
+      }
     }
   })
 

@@ -14,7 +14,7 @@ import {
   resumeTask,
   deleteTask,
 } from './db.js'
-import { runAgent } from './agent.js'
+import { runAgent, ClaudeDisconnectedError } from './agent.js'
 import { buildMemoryContext, saveConversationTurn, runDecaySweep } from './memory.js'
 import { buildConnectionsContext } from './connections/index.js'
 import { formatForTui } from './format.js'
@@ -261,8 +261,12 @@ async function handleMessage(rawText: string): Promise<void> {
   } catch (err) {
     if (spinner) spinner.stop()
     isProcessing = false
-    logger.error({ err }, 'TUI message handler error')
-    console.log(chalk.red('Something went wrong.'))
+    if (err instanceof ClaudeDisconnectedError) {
+      console.log(chalk.red('Claude Code is disconnected. Run: ') + chalk.bold('claude /login'))
+    } else {
+      logger.error({ err }, 'TUI message handler error')
+      console.log(chalk.red('Something went wrong.'))
+    }
   }
 }
 
